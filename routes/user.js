@@ -1,17 +1,17 @@
-const router = require("express").Router()
-const User = require('../models/user')
-const auth = require('../middleware/auth')
+const router = require("express").Router();
+const User = require("../models/user");
+const auth = require("../middleware/auth");
 
-router.get('/', auth , (req,res) =>{
+router.get("/", auth, (req, res) => {
+  User.findOne({ email: req.user.email })
+    .select("-password")
+    .exec((err, user) => {
+      if (err) {
+        throw err;
+      }
 
-    User.findOne({ email: req.user.email }).select('-password').exec((err , user) =>{
-        if (err) {
-            throw err
-        }
+      res.send(user);
+    });
+});
 
-        res.send(user)
-    })
-
-})
-
-module.exports = router; 
+module.exports = router;
